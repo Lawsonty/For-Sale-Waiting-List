@@ -1,0 +1,17 @@
+5
+5 GetHard
+Joe 3
+Nate 4
+Amber 5
+John 4
+Sue 3
+3 Sinister
+Greg 4
+TJ 2
+Simon 5
+5 Minions
+Missa 5
+Amber 5
+Gabe 4
+Bob 3
+Tim 3
