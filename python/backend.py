@@ -7,8 +7,9 @@ class DBM:
         c = self.conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS movies(id INTEGER PRIMARY KEY
                      AUTOINCREMENT, title TEXT)''')
-        c.execute('''CREATE TABLE IF NOT EXISTS  customers(id INTEGER PRIMARY
-                     KEY AUTOINCREMENT, name TEXT NOT NULL, phone NOT NULL)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS  customers(id INTEGER
+                     , name TEXT NOT NULL, phone NOT NULL,
+                     PRIMARY KEY(name, phone))''')
         self.conn.commit()
 
     def addMovie(self, title):
@@ -17,25 +18,22 @@ class DBM:
                      VALUES (?)''', (title,))
         self.conn.commit()
 
+    def pullMovie(self, title, copies):
+        pass
 
-# class Movies:
-#     def __init__(self, conn):
-#         self.conn = conn
-#         c = conn.cursor()
-#         c.execute('''CREATE TABLE IF NOT EXSISTS movies(id INTEGER PRIMARY KEY
-#                      AUTOINCREMENT, title TEXT)''')
-#         c.execute('''CREATE TABLE IF NOT EXISTS  ''')
-#
-#     def addMovie(self):
-#         pass
-#
-#
-# class Customers:
-#     def __init__(self, conn):
-#         pass
+    def delMovie(self, title):
+        c = self.conn.cursor()
+        c.execute('''DELETE FROM movies WHERE title=?''', (title,))
+        self.conn.commit()
+
+    def addCustomer(self, name, number):
+        pass
 
 
 if __name__ == '__main__':
     dbm = DBM()
     dbm.addMovie("Saw IV")
+    dbm.addMovie("Saw V")
+    print(dbm.conn.cursor().execute("SELECT * FROM movies").fetchall())
+    dbm.delMovie("Saw IV")
     print(dbm.conn.cursor().execute("SELECT * FROM movies").fetchall())
