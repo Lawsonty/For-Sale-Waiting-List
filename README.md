@@ -3,7 +3,7 @@ A  program for tracking customers waiting for movies to become available to purc
 
 Goals:
 - [x] Import IMDb dataset.
-- [ ] Write backend logic for adding a movie.
+- [x] Write backend logic for adding a movie.
 - [ ] Write backend logic for adding a customer.
 - [ ] Write logic for creating a list of customers based on new movies available for sale.
 - [ ] Create GUI.
