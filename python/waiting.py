@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QVBoxLayout,
                              QTabWidget, QHBoxLayout, QTableWidget,
                              QPushButton, QTableWidgetItem, QAbstractItemView,
                              QTableView, QAction, qApp, QMenu, QMainWindow,
-                             QListView, QInputDialog, QListWidget, QListWidgetItem)
+                             QListView, QInputDialog, QListWidget,
+                             QListWidgetItem, QDialog)
 from PyQt5.QtGui import QIcon, QPixmap
 import backend
 
@@ -69,8 +70,18 @@ class CustomerLayout(QVBoxLayout):
         self.parent = parent
         self.customers = QListWidget()
         self.addWidget(self.customers)
-
         self.parent.movies.movies.clicked.connect(self.test)
+
+        buttons = QHBoxLayout()
+        addButton = QPushButton('+')
+        delButton = QPushButton('-')
+        buttons.addWidget(delButton)
+        buttons.addWidget(addButton)
+        self.addLayout(buttons)
+        addButton.clicked.connect(self.addCustomer)
+
+    def addCustomer(self):
+        pass
 
     def test(self, current):
         print(current.data())
@@ -79,17 +90,16 @@ class CustomerLayout(QVBoxLayout):
         for item in self.parent.parent.db.getMovieList(current.data()):
             print(item)
             self.customers.addItem(str(item[0]))
-        # self.model.select()
+
+    class CustomerInput(QDialog):
+        def __init__(self, parent=None):
+            super().__init__(parent=parent)
 
 
 class CustomerList(QListView):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-    # @override
-    # def currentChanged(self, current, previous):
-    #     super.currentChanged(current, previous)
-    #     print('changed')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
