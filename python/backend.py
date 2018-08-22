@@ -34,6 +34,20 @@ class DBM:
                      VALUES (?)''', (title,))
         self.conn.commit()
 
+    def getMovieList(self, title):
+        c = self.conn.cursor()
+        res = c.execute('''
+                     SELECT
+                       customers.name || ' ' || customers.phone
+                     FROM customers
+                     INNER JOIN list ON list.customerID = customers.phone
+                     INNER JOIN movies on movies.id = list.MovieID
+                     WHERE movies.title = ?
+                     ORDER BY list.Time
+                     ''', (title,)).fetchall()
+        print(res)
+        return res
+
     def pullMovie(self, title, copies):
         c = self.conn.cursor()
         res = c.execute('''
