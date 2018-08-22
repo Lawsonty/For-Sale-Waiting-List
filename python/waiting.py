@@ -69,27 +69,12 @@ class CustomerLayout(QVBoxLayout):
         self.parent = parent
         self.customers = QListWidget()
         self.addWidget(self.customers)
-        # self.model = QtSql.QSqlRelationalTableModel()
-        # self.model.setTable('list')
-        # self.model.setRelation(1, QtSql.QSqlRelation('movies', 'id', 'title'))
-        # self.model.setRelation(2, QtSql.QSqlRelation('customers', 'phone', 'name'))
-        # self.model.removeColumns(0, 2)
-        # self.model.removeColumns(0, 1)
-        # customers.setModel(self.model)
-        # self.parent.movies.movies.itemClicked.connect(self.model.select)
+
         self.parent.movies.movies.clicked.connect(self.test)
 
     def test(self, current):
         print(current.data())
-        # q = QtSql.QSqlQuery('''
-        #         SELECT list.CustomerID
-        #         FROM customers
-        #         INNER JOIN list on list.CustomerID = customer.phone
-        #         INNER JOIN movies on movies.id = list.MovieID
-        #         ORDER BY list.Time
-        #         ''')
-        # q = QtSql.QSqlQuery('SELECT customers.phone')
-        # self.model.setQuery(q)
+
         self.customers.clear()
         for item in self.parent.parent.db.getMovieList(current.data()):
             print(item)
