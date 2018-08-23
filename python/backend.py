@@ -95,10 +95,23 @@ class DBM:
 
     def addCustomertoMovie(self, number, movie):
         c = self.conn.cursor()
+        print(c.execute('''SELECT id FROM movies WHERE title=? LIMIT 1''',
+                        (movie,)))
         c.execute('''INSERT INTO list(MovieID, CustomerID)
                      VALUES (
                      (SELECT id FROM movies WHERE title=? LIMIT 1), ?)''',
                   (movie, number))
+        self.conn.commit()
+
+    def delCustomerFromMovie(self, movie, number):
+        c = self.conn.cursor()
+        c.execute('''DELETE FROM list
+                     WHERE CustomerID=?
+                     AND MovieID = (SELECT id FROM movies
+                                    WHERE title=?
+                                    LIMIT 1
+                                    )
+                     ''', (number, movie))
         self.conn.commit()
 
 
