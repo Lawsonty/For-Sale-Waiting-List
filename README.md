@@ -9,6 +9,7 @@ Goals:
 - [ ] Create GUI.
   - [x] List movies in database.
   - [x] List customers for selected movie.
-  - [ ] Allow adding of customers for selected movie.
+  - [x] Allow adding of customers for selected movie.
+  - [ ] Allow removing of customers for selected movie.
   - [ ] Create list of movies to pull.
 - [ ] Make it work in Windows.
