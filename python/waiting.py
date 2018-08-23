@@ -1,12 +1,11 @@
 import sys
-from PyQt5 import QtCore, QtSql, Qt
+from PyQt5 import QtSql
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QVBoxLayout,
-                             QTabWidget, QHBoxLayout, QTableWidget,
-                             QPushButton, QTableWidgetItem, QAbstractItemView,
-                             QTableView, QAction, qApp, QMenu, QMainWindow,
+                             QHBoxLayout,
+                             QPushButton,
+                             QAction,  QMainWindow,
                              QListView, QInputDialog, QListWidget,
-                             QListWidgetItem, QDialog)
-from PyQt5.QtGui import QIcon, QPixmap
+                             QDialog, QLineEdit)
 import backend
 
 
@@ -69,6 +68,7 @@ class CustomerLayout(QVBoxLayout):
         super().__init__(parent)
         self.parent = parent
         self.customers = QListWidget()
+        self.movieSelected = None
         self.addWidget(self.customers)
         self.parent.movies.movies.clicked.connect(self.test)
 
@@ -80,12 +80,24 @@ class CustomerLayout(QVBoxLayout):
         self.addLayout(buttons)
         addButton.clicked.connect(self.addCustomer)
 
-    def addCustomer(self):
-        pass
+    def addCustomer(self, customer):
+        if self.movieSelected is None:
+            return
+        d = self.CustomerInput(parent=self.parent.parent)
+        d.exec_()
+        print(d.getData())
+        ok, name, number = d.getData()
+        if ok:
+            self.parent.parent.db.addCustomer(name, number)
+            print(self.movieSelected)
+            self.parent.parent.db.addCustomertoMovie(number,
+                                                     self.movieSelected)
+            self.customers.addItem(name + ' ' + number)
+        # self.parent.parent.db.addCustomer
 
     def test(self, current):
         print(current.data())
-
+        self.movieSelected = current.data()
         self.customers.clear()
         for item in self.parent.parent.db.getMovieList(current.data()):
             print(item)
@@ -93,7 +105,49 @@ class CustomerLayout(QVBoxLayout):
 
     class CustomerInput(QDialog):
         def __init__(self, parent=None):
-            super().__init__(parent=parent)
+            self.clean = False
+            super().__init__(parent)
+            layout = QVBoxLayout()
+            self.setWindowTitle('Add Customer')
+            self.setLayout(layout)
+            layout1 = QHBoxLayout()
+            layout2 = QHBoxLayout()
+            layout3 = QHBoxLayout()
+            layout.addLayout(layout1)
+            layout.addLayout(layout2)
+            layout.addLayout(layout3)
+            layout1.addWidget(QLabel('Name'))
+            self.nameEdit = QLineEdit()
+            layout1.addWidget(self.nameEdit)
+
+            layout2.addWidget(QLabel('Number'))
+            self.numberEdit = QLineEdit()
+            layout2.addWidget(self.numberEdit)
+
+            layout3.addWidget(QLabel('Name'))
+            self.okButton = QPushButton('Ok')
+            self.cancelButton = QPushButton('Cancel')
+            layout3.addWidget(self.okButton)
+            layout3.addWidget(self.cancelButton)
+            self.okButton.clicked.connect(self.ok)
+            self.cancelButton.clicked.connect(self.cancel)
+
+        def getData(self):
+            return self.clean, self.nameEdit.text(), self.numberEdit.text()
+
+        def ok(self):
+            self.clean = True
+            if self.validate():
+                self.close()
+
+        def cancel(self):
+            self.clean = False
+            self.close()
+
+        def validate(self):
+            if not len(self.nameEdit.text().strip()):
+                return False
+            return True
 
 
 class CustomerList(QListView):
